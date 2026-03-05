@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Urashima Tarō</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --paper: #f5efe3;
+    --aged: #e8ddc8;
+    --sea-deep: #1b3a5c;
+    --sea-mid: #2e6b8a;
+    --sea-light: #7bb8cc;
+    --coral: #c45c3a;
+    --gold: #c9913a;
+    --gold-light: #e8c068;
+    --mist: rgba(245, 239, 227, 0.85);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+    font-weight: 300;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 120% 60% at 50% 110%, #2e6b8a22 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 48px, rgba(44,107,138,0.04) 48px, rgba(44,107,138,0.04) 50px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 80px 0 60px;
+    position: relative;
+  }
+
+  .hero::after {
+    content: '🐢';
+    font-size: 48px;
+    display: block;
+    margin-top: 8px;
+    filter: drop-shadow(0 4px 8px rgba(27,58,92,0.2));
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--sea-mid);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-family: 'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    color: var(--sea-deep);
+    display: inline-block;
+  }
+
+  h1::before, h1::after {
+    content: '＊';
+    font-size: 18px;
+    color: var(--gold);
+    vertical-align: middle;
+    margin: 0 16px;
+  }
+
+  .wave-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0;
+  }
+
+  .wave-divider::before,
+  .wave-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .wave-divider span {
+    font-size: 20px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .toc {
+    background: var(--aged);
+    border: 1px solid var(--gold-light);
+    border-radius: 2px;
+    padding: 32px 40px;
+    margin: 0 auto 64px;
+    max-width: 520px;
+    position: relative;
+    box-shadow: 4px 4px 0 rgba(201, 145, 58, 0.15);
+  }
+
+  .toc-label {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--aged);
+    padding: 0 16px;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    border: 1px solid var(--gold-light);
+    white-space: nowrap;
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+  }
+
+  .toc ol li {
+    counter-increment: toc-counter;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px dashed rgba(201,145,58,0.25);
+  }
+
+  .toc ol li:last-child { border-bottom: none; }
+
+  .toc ol li::before {
+    content: counter(toc-counter, upper-roman);
+    font-size: 11px;
+    color: var(--gold);
+    min-width: 22px;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  body.lang-ja .toc ol li::before {
+    content: counter(toc-counter, cjk-ideographic);
+  }
+
+  .toc a {
+    color: var(--sea-deep);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    transition: color 0.2s;
+  }
+
+  .toc a:hover { color: var(--coral); }
+
+  .story-section {
+    margin-bottom: 72px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(20px, 3.5vw, 28px);
+    font-weight: 700;
+    color: var(--sea-deep);
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--sea-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sec-num {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+
+  .story-body {
+    font-size: 15.5px;
+    line-height: 2.1;
+    color: #2d2416;
+    text-indent: 1.5em;
+    margin-bottom: 28px;
+  }
+
+  .dialogue {
+    display: flex;
+    flex-direction: column;
+    margin: 28px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(27,58,92,0.08);
+  }
+
+  .dialogue-row {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    border-bottom: 1px solid rgba(201,145,58,0.15);
+    background: var(--mist);
+    transition: background 0.2s;
+  }
+
+  .dialogue-row:hover { background: rgba(123,184,204,0.12); }
+  .dialogue-row:last-child { border-bottom: none; }
+
+  .speaker {
+    padding: 14px 16px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    font-weight: 700;
+    border-right: 2px solid var(--gold-light);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: rgba(232,192,104,0.08);
+  }
+
+  .line {
+    padding: 14px 20px;
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  .back-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sea-mid);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    padding: 8px 16px;
+    border: 1px solid var(--sea-light);
+    border-radius: 2px;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .back-top:hover {
+    background: var(--sea-deep);
+    color: var(--paper);
+    border-color: var(--sea-deep);
+  }
+
+  .section-image {
+    float: right;
+    margin: 0 0 24px 32px;
+    border: 3px solid var(--aged);
+    box-shadow: 6px 6px 0 rgba(27,58,92,0.12);
+    max-width: 220px;
+    width: 100%;
+    border-radius: 2px;
+  }
+
+  .clearfix::after { content: ''; display: table; clear: both; }
+
+  footer {
+    text-align: center;
+    padding: 40px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: rgba(27,58,92,0.35);
+  }
+
+  footer::before {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold-light);
+    margin: 0 auto 24px;
+  }
+
+  /* — Language toggle — */
+  .lang-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    background: var(--sea-deep);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(27,58,92,0.3);
+  }
+
+  .lang-opt {
+    padding: 10px 16px;
+    color: rgba(245,239,227,0.5);
+    background: none;
+    border: none;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .lang-opt.active {
+    background: var(--gold);
+    color: var(--sea-deep);
+    font-weight: 700;
+  }
+
+  .lang-opt:hover:not(.active) {
+    color: var(--paper);
+    background: rgba(255,255,255,0.1);
+  }
+
+  .lang-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(245,239,227,0.2);
+    flex-shrink: 0;
+  }
+
+  /* — Language visibility — */
+  [data-lang] { display: none; }
+  body.lang-en [data-lang="en"] { display: contents; }
+  body.lang-ja [data-lang="ja"] { display: contents; }
+
+  @media (max-width: 560px) {
+    .wrapper { padding: 0 20px 60px; }
+    .section-image { float: none; margin: 0 auto 20px; display: block; max-width: 100%; }
+    .dialogue-row { grid-template-columns: 70px 1fr; }
+    .toc { padding: 28px 24px; }
+    .lang-toggle { top: 12px; right: 12px; }
+  }
+</style>
+</head>
+<body class="lang-en">
+
+<div class="lang-toggle">
+  <button class="lang-opt active" id="btn-en" onclick="setLang('en')">EN</button>
+  <div class="lang-divider"></div>
+  <button class="lang-opt" id="btn-ja" onclick="setLang('ja')">JA</button>
+</div>
+
+<div class="wrapper">
+
+  <div class="hero" id="Start">
+    <div class="hero-eyebrow">
+      <span data-lang="en">A Japanese Folk Tale</span>
+      <span data-lang="ja">むかしばなし</span>
+    </div>
+    <h1>
+      <span data-lang="en">Urashima Tarō</span>
+      <span data-lang="ja">うらしま太郎</span>
+    </h1>
+  </div>
+
+  <div class="wave-divider"><span>〜</span></div>
+
+  <nav class="toc">
+    <div class="toc-label">
+      <span data-lang="en">Contents</span>
+      <span data-lang="ja">目次</span>
+    </div>
+    <ol>
+      <li><a href="#S1"><span data-lang="en">Let the Turtle Go</span><span data-lang="ja">にがしておやりよ</span></a></li>
+      <li><a href="#S2"><span data-lang="en">The Dragon Palace</span><span data-lang="ja">りゅうぐうじょう</span></a></li>
+      <li><a href="#S3"><span data-lang="en">Princess Otohime</span><span data-lang="ja">おとひめさま</span></a></li>
+      <li><a href="#S4"><span data-lang="en">The Jeweled Box</span><span data-lang="ja">たまてばこ</span></a></li>
+      <li><a href="#S5"><span data-lang="en">Upon Returning</span><span data-lang="ja">かえってみると</span></a></li>
+      <li><a href="#S6"><span data-lang="en">The White Smoke</span><span data-lang="ja">まっしろのけむり</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- S1 -->
+  <section class="story-section" id="S1">
+    <h2>
+      <span class="sec-num"><span data-lang="en">I</span><span data-lang="ja">一</span></span>
+      <span data-lang="en">Let the Turtle Go</span>
+      <span data-lang="ja">にがしておやりよ</span>
+    </h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_e.jpg" alt="Children tormenting the turtle">
+      <p class="story-body">
+        <span data-lang="en">Long, long ago, in a small fishing village, there lived a kind-hearted young man named Urashima Tarō. One day, as he walked along the shore, he came upon a group of children who had caught a large turtle. Drawing closer, he saw that the children were tormenting the poor creature — and the turtle, tears streaming down its face, gazed up at him with pleading eyes.</span>
+        <span data-lang="ja">むかしむかし、ある村(むら)に、心のやさしい浦島太郎(うらしまたろう)という若者(わかもの)がいました。浦島(うらしま)さんが海辺(うみべ)を通りかかると、子どもたちが大きなカメを捕(つか)まえていました。そばによって見てみると、子どもたちがみんなでカメをいじめています。見るとカメは涙(なみだ)をハラハラとこぼしながら、浦島(うらしま)さんを見つめています。</span>
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Oh dear, poor thing — let him go, now."</span><span data-lang="ja">「おやおや、かわいそうに、逃(に)がしておやりよ」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Child</span><span data-lang="ja">こども</span></div>
+        <div class="line"><span data-lang="en">"No way! We just caught him. What we do with him is our business!"</span><span data-lang="ja">「いやだよ。おらたちが、やっと捕まえたんだもの。どうしようと、おらたちの勝手(かって)だろ」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Then let me buy him from you. Here — take this money and give him to me."</span><span data-lang="ja">「それでは、このお金をあげるから、おじさんにカメを売(う)っておくれ」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Child</span><span data-lang="ja">こども</span></div>
+        <div class="line"><span data-lang="en">"Fine, if you put it that way."</span><span data-lang="ja">「うん、それならいいよ」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Are you all right, little one? Don't let yourself get caught again, now."</span><span data-lang="ja">「カメさん、大丈夫(だいじょうぶ)かい？　もう、捕(つか)まるんじゃないよ」</span></div>
+      </div>
+    </div>
+    <a class="back-top" href="#Start"><span data-lang="en">↑ Back to Top</span><span data-lang="ja">↑ 先頭へ</span></a>
+  </section>
+
+  <!-- S2 -->
+  <section class="story-section" id="S2">
+    <h2>
+      <span class="sec-num"><span data-lang="en">II</span><span data-lang="ja">二</span></span>
+      <span data-lang="en">The Dragon Palace</span>
+      <span data-lang="ja">りゅうぐうじょう</span>
+    </h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_d.jpg" alt="Descending beneath the sea">
+      <p class="story-body">
+        <span data-lang="en">Two or three days later, while Tarō was out fishing, he heard a voice calling softly: "Urashima… Urashima…" It was the turtle he had saved. The turtle carried him on its back and dove deep into the sea. Around them the water glowed a brilliant blue; great curtains of kelp swayed in the current, and forests of red and pink coral stretched as far as the eye could see.</span>
+        <span data-lang="ja">さて、それから二、三日たったある日の事、浦島さんが海に出かけて魚(さかな)を釣(つ)っていると、「・・・浦島さん、・・・浦島さん」と、誰(だれ)かが呼(よ)ぶ声(こえ)がします。カメは浦島さんを背中に乗せて、海の中をずんずんともぐっていきました。海の中にはまっ青(さお)な光(ひかり)が差(さ)し込(こ)み、コンブがユラユラとゆれ、赤やピンクのサンゴの林(はやし)がどこまでも続(つづ)いています。</span>
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Who could be calling me?"</span><span data-lang="ja">「おや？誰が呼んでいるのだろう？」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Turtle</span><span data-lang="ja">かめ</span></div>
+        <div class="line"><span data-lang="en">"It is I! Thank you so much for saving me the other day. Tell me, have you ever visited the Dragon Palace beneath the sea?"</span><span data-lang="ja">「わたしですよ。このあいだは助(たす)けていただいて、ありがとうございました。おかげで助かりました。ところで浦島さんは、竜宮(りゅうぐう)へ行った事(こと)がありますか？」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"The Dragon Palace? I can't say that I have — where is it?"</span><span data-lang="ja">「竜宮？　さあ？　竜宮って、どこにあるんだい？」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Turtle</span><span data-lang="ja">かめ</span></div>
+        <div class="line"><span data-lang="en">"At the bottom of the sea! Allow me to take you there. Please, climb onto my back."</span><span data-lang="ja">「海(うみ)の底(そこ)です。わたしがお連(つ)れしましょう。さあ、背中(せなか)へ乗(の)ってください」</span></div>
+      </div>
+    </div>
+    <a class="back-top" href="#Start"><span data-lang="en">↑ Back to Top</span><span data-lang="ja">↑ 先頭へ</span></a>
+  </section>
+
+  <!-- S3 -->
+  <section class="story-section" id="S3">
+    <h2>
+      <span class="sec-num"><span data-lang="en">III</span><span data-lang="ja">三</span></span>
+      <span data-lang="en">Princess Otohime</span>
+      <span data-lang="ja">おとひめさま</span>
+    </h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_a.jpg" alt="The Princess welcomes Taro">
+      <p class="story-body">
+        <span data-lang="en">As Tarō gazed about in wonder, they arrived before a magnificent palace. Led inside by the turtle, he was greeted by the beautiful Princess Otohime, mistress of the Dragon Palace, surrounded by a retinue of colorful fish. He was escorted to a great hall, where feast after splendid feast was brought to him, and to the strains of gentle music, sea bream, flounder, and jellyfish performed the most breathtaking dances he had ever seen.</span>
+        <span data-lang="ja">浦島さんがウットリしていると、やがて立派(りっぱ)なご殿(てん)へ着(つ)きました。カメに案内(あんない)されるまま進(すす)んでいくと、この竜宮の主人(しゅじん)の美(うつく)しい乙姫(おとひめ)さまが、色とりどりの魚(さかな)たちと一緒(いっしょ)に浦島さんを出迎(でむか)えてくれました。浦島さんは、竜宮の広間(ひろま)ヘ案内(あんない)されました。ふんわりと気持(きも)ちのよい音楽(おんがく)が流(なが)れて、タイやヒラメやクラゲたちの、それは見事(みごと)な踊(おど)りが続(つづ)きました。</span>
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Princess</span><span data-lang="ja">おとひめ</span></div>
+        <div class="line"><span data-lang="en">"Welcome, Urashima Tarō. I am Princess Otohime, mistress of this Dragon Palace. You saved my turtle, and for that I am deeply grateful. Please, let me show you everything here — and do stay as long as you like."</span><span data-lang="ja">「ようこそ、浦島(うらしま)さん。わたしは、この竜宮(りゅうぐう)の主人(しゅじん)の乙姫(おとひめ)です。このあいだはカメを助けてくださって、ありがとうございます。お礼(れい)に、竜宮をご案内(あんない)します。どうぞ、ゆっくりしていってくださいね」</span></div>
+      </div>
+    </div>
+    <a class="back-top" href="#Start"><span data-lang="en">↑ Back to Top</span><span data-lang="ja">↑ 先頭へ</span></a>
+  </section>
+
+  <!-- S4 -->
+  <section class="story-section" id="S4">
+    <h2>
+      <span class="sec-num"><span data-lang="en">IV</span><span data-lang="ja">四</span></span>
+      <span data-lang="en">The Jeweled Box</span>
+      <span data-lang="ja">たまてばこ</span>
+    </h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_b.jpg" alt="The tamatebako jeweled box">
+      <p class="story-body">
+        <span data-lang="en">Lost in the pleasures of the Dragon Palace, three years slipped by without Tarō noticing. Then one day a sudden thought struck him — what had become of his family and friends back home? He went at once to the Princess.</span>
+        <span data-lang="ja">乙姫(おとひめ)さまに言われるまま竜宮(りゅうぐう)で過(す)ごすうちに、三年(さんねん)の月日(つきひ)がたってしまいました。ある時、浦島さんは、はっと思い出しました。（家族(かぞく)や友(とも)だちは、どうしているだろう？）そこで浦島さんは、乙姫(おとひめ)さまに言いました。</span>
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Princess, thank you for everything — but I must return home now."</span><span data-lang="ja">「乙姫さま、今までありがとうございます。ですが、もうそろそろ家(いえ)へ帰(かえ)らせていただきます」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Princess</span><span data-lang="ja">おとひめ</span></div>
+        <div class="line"><span data-lang="en">"You wish to leave? You are welcome to stay here with us, if you'd like."</span><span data-lang="ja">「帰(かえ)られるのですか？　よろしければ、このままここで暮(くら)しては」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"I cannot. There are people waiting for me."</span><span data-lang="ja">「いいえ、わたしの帰(かえ)りを待(ま)つ者(もの)もおりますので」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Princess</span><span data-lang="ja">おとひめ</span></div>
+        <div class="line"><span data-lang="en">"…I see. It pains me to say goodbye. Then please accept this tamatebako — this Jeweled Box — as a parting gift. Sealed within it is the 'time' you have spent here. As long as you keep it closed, you will not age a single day. But should you ever open it, all that time will rush back to you at once. Promise me — never open it."</span><span data-lang="ja">「・・・そうですか。それはおなごりおしいです。では、おみやげに玉手箱(たまてばこ)を差(さ)し上(あ)げましょう。この中には、浦島(うらしま)さんが竜宮(りゅうぐう)で過(す)ごされた『時(とき)』が入(はい)っております。これを開(あ)けずに持(も)っている限(かぎ)り、浦島さんは年(とし)を取(と)りません。ですが一度(いちど)開(あ)けてしまうと、今までの『時』が戻(もど)ってしまいますので、決(けっ)して開(あ)けてはなりませんよ」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"I understand. Thank you, from the bottom of my heart."</span><span data-lang="ja">「はい、わかりました。ありがとうございます」</span></div>
+      </div>
+    </div>
+    <a class="back-top" href="#Start"><span data-lang="en">↑ Back to Top</span><span data-lang="ja">↑ 先頭へ</span></a>
+  </section>
+
+  <!-- S5 -->
+  <section class="story-section" id="S5">
+    <h2>
+      <span class="sec-num"><span data-lang="en">V</span><span data-lang="ja">五</span></span>
+      <span data-lang="en">Upon Returning</span>
+      <span data-lang="ja">かえってみると</span>
+    </h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_f.jpg" alt="Taro returns to the surface">
+      <p class="story-body">
+        <span data-lang="en">Bidding farewell to the Princess, Tarō rode the turtle back to the surface world. But when he arrived, he looked around in bewilderment. This was surely the shore where he had fished — yet everything felt wrong. His home was nowhere to be found, and every face he passed was a stranger's. He stopped an old man and asked.</span>
+        <span data-lang="ja">乙姫さまと別(わか)れた浦島さんは、またカメに送(おく)られて地上(ちじょう)へ帰(かえ)りました。地上にもどった浦島さんは、まわりを見回(みまわ)してびっくり。確(たし)かにここは浦島さんが釣(つ)りをしていた場所(ばしょ)ですが、何だか様子が違(ちが)います。浦島さんの家はどこにも見あたりませんし、出会(であ)う人も知(し)らない人ばかりです。浦島さんが一人(ひとり)の老人(ろうじん)に尋(たず)ねてみました。</span>
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Excuse me — do you know of a family called Urashima?"</span><span data-lang="ja">「・・・あの、すみません。浦島の家を知りませんか？」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Elder</span><span data-lang="ja">ろうじん</span></div>
+        <div class="line"><span data-lang="en">"Urashima? …Ah yes, I believe there was someone by that name — went out to sea about fifty years ago and was never seen again."</span><span data-lang="ja">「浦島？・・・ああ、確(たし)か浦島という人なら五十年ほど前(まえ)に海へ出たきりで、帰(かえ)らないそうですよ」</span></div>
+      </div>
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Fifty years…? Three years in the Dragon Palace equals fifty years up here? Then my family, my friends — they're all gone… Wait. The Princess said that opening this box would return the 'time' to me… Perhaps if I open it, I can go back to when I belonged…"</span><span data-lang="ja">「えっ！五十年前。・・・竜宮の三年は、この世(よ)の五十年にあたるのだろうか・・・。家族(かぞく)も友(とも)だちも、みんな死(し)んでしまったのか・・・。そう言えば、乙姫(おとひめ)さまは言っていたな。この玉手箱を開(あ)けると、『時(とき)』が戻(もど)ってしまうと。・・・もしかしてこれを開けると、自分(じぶん)が暮(く)らしていた時(とき)に戻(もど)るのでは」</span></div>
+      </div>
+    </div>
+    <a class="back-top" href="#Start"><span data-lang="en">↑ Back to Top</span><span data-lang="ja">↑ 先頭へ</span></a>
+  </section>
+
+  <!-- S6 -->
+  <section class="story-section" id="S6">
+    <h2>
+      <span class="sec-num"><span data-lang="en">VI</span><span data-lang="ja">六</span></span>
+      <span data-lang="en">The White Smoke</span>
+      <span data-lang="ja">まっしろのけむり</span>
+    </h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_c.jpg" alt="Taro opens the box">
+      <p class="story-body">
+        <span data-lang="en">And so, despite the warning, Tarō opened the Jeweled Box. Billow upon billow of white smoke poured forth. In the mist, visions appeared — the Dragon Palace, the beautiful Princess Otohime, all the happy memories of his three years beneath the sea, one after another. Tarō smiled… but the smoke slowly thinned and faded. And there in its place stood not a young man, but a frail, trembling old man, his hair and beard as white as snow.</span>
+        <span data-lang="ja">そう思(おも)った浦島さんは、開(あ)けてはいけないと言われていた玉手箱を開けてしまいました。モクモクモク・・・。すると中から、まっ白(しろ)のけむりが出てきました。けむりの中に、竜宮(りゅうぐう)や美(うつく)しい乙姫(おとひめ)さまの姿(すがた)がうつりました。そして楽(たの)しかった竜宮での三年が、次から次へとうつし出されます。浦島さんは、喜(よろこ)びました。でも玉手箱から出てきたけむりは次第(しだい)に薄(うす)れていき、その場(ば)に残(のこ)ったのは髪(かみ)の毛(け)もひげもまっ白(しろ)の、ヨポヨポのおじいさんになった浦島さんだったのです。</span>
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row">
+        <div class="speaker"><span data-lang="en">Taro</span><span data-lang="ja">たろう</span></div>
+        <div class="line"><span data-lang="en">"Ah… I have come back to the Dragon Palace after all."</span><span data-lang="ja">「ああ、わたしは、竜宮へ戻(もど)ってきたんだ」</span></div>
+      </div>
+    </div>
+    <a class="back-top" href="#Start"><span data-lang="en">↑ Back to Top</span><span data-lang="ja">↑ 先頭へ</span></a>
+  </section>
+
+  <div class="wave-divider"><span>終</span></div>
+  <footer>
+    <span data-lang="en">Once upon a time &nbsp;·&nbsp; A Japanese Folk Tale</span>
+    <span data-lang="ja">むかしむかし &nbsp;・&nbsp; 日本の民話</span>
+  </footer>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.documentElement.lang = lang;
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
+    document.title = lang === 'ja' ? 'うらしま太郎' : 'Urashima Tarō';
+  }
+</script>
+</body>
+</html>
