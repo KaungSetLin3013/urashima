@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>うらしま太郎</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --paper: #f5efe3;
+    --aged: #e8ddc8;
+    --sea-deep: #1b3a5c;
+    --sea-mid: #2e6b8a;
+    --sea-light: #7bb8cc;
+    --coral: #c45c3a;
+    --gold: #c9913a;
+    --gold-light: #e8c068;
+    --mist: rgba(245, 239, 227, 0.85);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+    font-weight: 300;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* — Wave background — */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 120% 60% at 50% 110%, #2e6b8a22 0%, transparent 60%),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 48px,
+        rgba(44,107,138,0.04) 48px,
+        rgba(44,107,138,0.04) 50px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* — Paper texture overlay — */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* — HERO — */
+  .hero {
+    text-align: center;
+    padding: 80px 0 60px;
+    position: relative;
+  }
+
+  .hero::after {
+    content: '🐢';
+    font-size: 48px;
+    display: block;
+    margin-top: 8px;
+    filter: drop-shadow(0 4px 8px rgba(27,58,92,0.2));
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--sea-mid);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-family: 'Shippori Mincho', 'Hiragino Mincho ProN', serif;
+    font-size: clamp(42px, 8vw, 80px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.12em;
+    color: var(--sea-deep);
+    position: relative;
+    display: inline-block;
+  }
+
+  h1::before, h1::after {
+    content: '＊';
+    font-size: 18px;
+    color: var(--gold);
+    vertical-align: middle;
+    margin: 0 16px;
+  }
+
+  /* — Decorative divider — */
+  .wave-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0;
+  }
+
+  .wave-divider::before,
+  .wave-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .wave-divider span {
+    font-size: 20px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* — TOC — */
+  .toc {
+    background: var(--aged);
+    border: 1px solid var(--gold-light);
+    border-radius: 2px;
+    padding: 32px 40px;
+    margin: 0 auto 64px;
+    max-width: 520px;
+    position: relative;
+    box-shadow: 4px 4px 0 rgba(201, 145, 58, 0.15);
+  }
+
+  .toc::before {
+    content: '目次';
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--aged);
+    padding: 0 16px;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    border: 1px solid var(--gold-light);
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+  }
+
+  .toc ol li {
+    counter-increment: toc-counter;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px dashed rgba(201,145,58,0.25);
+  }
+
+  .toc ol li:last-child { border-bottom: none; }
+
+  .toc ol li::before {
+    content: counter(toc-counter, cjk-ideographic);
+    font-size: 11px;
+    color: var(--gold);
+    min-width: 18px;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .toc a {
+    color: var(--sea-deep);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .toc a:hover { color: var(--coral); }
+
+  /* — SECTIONS — */
+  .story-section {
+    margin-bottom: 72px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 700;
+    color: var(--sea-deep);
+    letter-spacing: 0.15em;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--sea-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  h2::before {
+    content: attr(data-num);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+
+  .story-body {
+    font-size: 15.5px;
+    line-height: 2.1;
+    color: #2d2416;
+    text-indent: 1.5em;
+    margin-bottom: 28px;
+  }
+
+  /* — Dialogue cards — */
+  .dialogue {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 28px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(27,58,92,0.08);
+  }
+
+  .dialogue-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    border-bottom: 1px solid rgba(201,145,58,0.15);
+    background: var(--mist);
+    transition: background 0.2s;
+  }
+
+  .dialogue-row:hover {
+    background: rgba(123,184,204,0.12);
+  }
+
+  .dialogue-row:last-child { border-bottom: none; }
+
+  .speaker {
+    padding: 14px 16px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-weight: 700;
+    border-right: 2px solid var(--gold-light);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: rgba(232,192,104,0.08);
+  }
+
+  .line {
+    padding: 14px 20px;
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  /* — Back to top — */
+  .back-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sea-mid);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    padding: 8px 16px;
+    border: 1px solid var(--sea-light);
+    border-radius: 2px;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .back-top:hover {
+    background: var(--sea-deep);
+    color: var(--paper);
+    border-color: var(--sea-deep);
+  }
+
+  /* — Images — */
+  .section-image {
+    float: right;
+    margin: 0 0 24px 32px;
+    border: 3px solid var(--aged);
+    box-shadow: 6px 6px 0 rgba(27,58,92,0.12);
+    max-width: 220px;
+    width: 100%;
+    border-radius: 2px;
+  }
+
+  .clearfix::after { content: ''; display: table; clear: both; }
+
+  /* — Footer — */
+  footer {
+    text-align: center;
+    padding: 40px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: rgba(27,58,92,0.35);
+  }
+
+  footer::before {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold-light);
+    margin: 0 auto 24px;
+  }
+
+  /* — Responsive — */
+  @media (max-width: 560px) {
+    .wrapper { padding: 0 20px 60px; }
+    .section-image { float: none; margin: 0 auto 20px; display: block; max-width: 100%; }
+    .dialogue-row { grid-template-columns: 60px 1fr; }
+    .toc { padding: 28px 24px; }
+  }
+
+  /* — Translate button — */
+  .lang-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sea-deep);
+    color: var(--paper);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 2px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(27,58,92,0.3);
+    transition: all 0.2s;
+  }
+
+  .lang-toggle:hover {
+    background: var(--sea-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(27,58,92,0.4);
+  }
+
+  .lang-toggle:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .lang-toggle .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(245,239,227,0.3);
+    border-top-color: var(--paper);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .lang-toggle.loading .spinner { display: block; }
+  .lang-toggle.loading .btn-label { opacity: 0.7; }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Fade transition when swapping language */
+  .translating [data-ja], .translating [data-en] {
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+<!-- Translate Button -->
+<button class="lang-toggle" id="langBtn" onclick="toggleLanguage()">
+  <div class="spinner"></div>
+  <span class="btn-label">🌐 English</span>
+</button>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero" id="Start">
+    <div class="hero-eyebrow">むかしばなし</div>
+    <h1>うらしま太郎</h1>
+  </div>
+
+  <div class="wave-divider"><span>〜</span></div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <ol>
+      <li><a href="#S1">にがしておやりよ</a></li>
+      <li><a href="#S2">りゅうぐうじょう</a></li>
+      <li><a href="#S3">おとひめさま</a></li>
+      <li><a href="#S4">たまてばこ</a></li>
+      <li><a href="#S5">かえってみると</a></li>
+      <li><a href="#S6">まっしろのけむり</a></li>
+    </ol>
+  </nav>
+
+  <!-- S1 -->
+  <section class="story-section" id="S1">
+    <h2 data-num="一">にがしておやりよ</h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_e.jpg" alt="カメをいじめる子どもたち">
+      <p class="story-body">
+        むかしむかし、ある村(むら)に、心のやさしい浦島太郎(うらしまたろう)という若者(わかもの)がいました。浦島(うらしま)さんが海辺(うみべ)を通りかかると、子どもたちが大きなカメを捕(つか)まえていました。そばによって見てみると、子どもたちがみんなでカメをいじめています。見るとカメは涙(なみだ)をハラハラとこぼしながら、浦島(うらしま)さんを見つめています。
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「おやおや、かわいそうに、逃(に)がしておやりよ」</div></div>
+      <div class="dialogue-row"><div class="speaker">こども</div><div class="line">「いやだよ。おらたちが、やっと捕まえたんだもの。どうしようと、おらたちの勝手(かって)だろ」</div></div>
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「それでは、このお金をあげるから、おじさんにカメを売(う)っておくれ」</div></div>
+      <div class="dialogue-row"><div class="speaker">こども</div><div class="line">「うん、それならいいよ」</div></div>
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「カメさん、大丈夫(だいじょうぶ)かい？　もう、捕(つか)まるんじゃないよ」</div></div>
+    </div>
+    <a class="back-top" href="#Start">↑ 先頭へ</a>
+  </section>
+
+  <!-- S2 -->
+  <section class="story-section" id="S2">
+    <h2 data-num="二">りゅうぐうじょう</h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_d.jpg" alt="海の底へ">
+      <p class="story-body">
+        さて、それから二、三日たったある日の事、浦島さんが海に出かけて魚(さかな)を釣(つ)っていると、「・・・浦島さん、・・・浦島さん」と、誰(だれ)かが呼(よ)ぶ声(こえ)がします。カメは浦島さんを背中に乗せて、海の中をずんずんともぐっていきました。海の中にはまっ青(さお)な光(ひかり)が差(さ)し込(こ)み、コンブがユラユラとゆれ、赤やピンクのサンゴの林(はやし)がどこまでも続(つづ)いています。
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「おや？誰が呼んでいるのだろう？」</div></div>
+      <div class="dialogue-row"><div class="speaker">かめ</div><div class="line">「わたしですよ。このあいだは助(たす)けていただいて、ありがとうございました。おかげで助かりました。ところで浦島さんは、竜宮(りゅうぐう)へ行った事(こと)がありますか？」</div></div>
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「竜宮？　さあ？　竜宮って、どこにあるんだい？」</div></div>
+      <div class="dialogue-row"><div class="speaker">かめ</div><div class="line">「海(うみ)の底(そこ)です。わたしがお連(つ)れしましょう。さあ、背中(せなか)へ乗(の)ってください」</div></div>
+    </div>
+    <a class="back-top" href="#Start">↑ 先頭へ</a>
+  </section>
+
+  <!-- S3 -->
+  <section class="story-section" id="S3">
+    <h2 data-num="三">おとひめさま</h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_a.jpg" alt="乙姫さまの出迎え">
+      <p class="story-body">
+        浦島さんがウットリしていると、やがて立派(りっぱ)なご殿(てん)へ着(つ)きました。カメに案内(あんない)されるまま進(すす)んでいくと、この竜宮の主人(しゅじん)の美(うつく)しい乙姫(おとひめ)さまが、色とりどりの魚(さかな)たちと一緒(いっしょ)に浦島さんを出迎(でむか)えてくれました。浦島さんは、竜宮の広間(ひろま)ヘ案内(あんない)されました。ふんわりと気持(きも)ちのよい音楽(おんがく)が流(なが)れて、タイやヒラメやクラゲたちの、それは見事(みごと)な踊(おど)りが続(つづ)きました。
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row"><div class="speaker">おとひめ</div><div class="line">「ようこそ、浦島(うらしま)さん。わたしは、この竜宮(りゅうぐう)の主人(しゅじん)の乙姫(おとひめ)です。このあいだはカメを助けてくださって、ありがとうございます。お礼(れい)に、竜宮をご案内(あんない)します。どうぞ、ゆっくりしていってくださいね」</div></div>
+    </div>
+    <a class="back-top" href="#Start">↑ 先頭へ</a>
+  </section>
+
+  <!-- S4 -->
+  <section class="story-section" id="S4">
+    <h2 data-num="四">たまてばこ</h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_b.jpg" alt="玉手箱">
+      <p class="story-body">
+        乙姫(おとひめ)さまに言われるまま竜宮(りゅうぐう)で過(す)ごすうちに、三年(さんねん)の月日(つきひ)がたってしまいました。ある時、浦島さんは、はっと思い出しました。（家族(かぞく)や友(とも)だちは、どうしているだろう？）そこで浦島さんは、乙姫(おとひめ)さまに言いました。
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「乙姫さま、今までありがとうございます。ですが、もうそろそろ家(いえ)へ帰(かえ)らせていただきます」</div></div>
+      <div class="dialogue-row"><div class="speaker">おとひめ</div><div class="line">「帰(かえ)られるのですか？　よろしければ、このままここで暮(くら)しては」</div></div>
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「いいえ、わたしの帰(かえ)りを待(ま)つ者(もの)もおりますので」</div></div>
+      <div class="dialogue-row"><div class="speaker">おとひめ</div><div class="line">「・・・そうですか。それはおなごりおしいです。では、おみやげに玉手箱(たまてばこ)を差(さ)し上(あ)げましょう。この中には、浦島(うらしま)さんが竜宮(りゅうぐう)で過(す)ごされた『時(とき)』が入(はい)っております。これを開(あ)けずに持(も)っている限(かぎ)り、浦島さんは年(とし)を取(と)りません。ですが一度(いちど)開(あ)けてしまうと、今までの『時』が戻(もど)ってしまいますので、決(けっ)して開(あ)けてはなりませんよ」</div></div>
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「はい、わかりました。ありがとうございます」</div></div>
+    </div>
+    <a class="back-top" href="#Start">↑ 先頭へ</a>
+  </section>
+
+  <!-- S5 -->
+  <section class="story-section" id="S5">
+    <h2 data-num="五">かえってみると</h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_f.jpg" alt="地上に戻った浦島さん">
+      <p class="story-body">
+        乙姫さまと別(わか)れた浦島さんは、またカメに送(おく)られて地上(ちじょう)へ帰(かえ)りました。地上にもどった浦島さんは、まわりを見回(みまわ)してびっくり。確(たし)かにここは浦島さんが釣(つ)りをしていた場所(ばしょ)ですが、何だか様子が違(ちが)います。浦島さんの家はどこにも見あたりませんし、出会(であ)う人も知(し)らない人ばかりです。浦島さんが一人(ひとり)の老人(ろうじん)に尋(たず)ねてみました。
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「・・・あの、すみません。浦島の家を知りませんか？」</div></div>
+      <div class="dialogue-row"><div class="speaker">ろうじん</div><div class="line">「浦島？・・・ああ、確(たし)か浦島という人なら五十年ほど前(まえ)に海へ出たきりで、帰(かえ)らないそうですよ」</div></div>
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「えっ！五十年前。・・・竜宮の三年は、この世(よ)の五十年にあたるのだろうか・・・。家族(かぞく)も友(とも)だちも、みんな死(し)んでしまったのか・・・。そう言えば、乙姫(おとひめ)さまは言っていたな。この玉手箱を開(あ)けると、『時(とき)』が戻(もど)ってしまうと。・・・もしかしてこれを開けると、自分(じぶん)が暮(く)らしていた時(とき)に戻(もど)るのでは」</div></div>
+    </div>
+    <a class="back-top" href="#Start">↑ 先頭へ</a>
+  </section>
+
+  <!-- S6 -->
+  <section class="story-section" id="S6">
+    <h2 data-num="六">まっしろのけむり</h2>
+    <div class="clearfix">
+      <img class="section-image" src="img/img_c.jpg" alt="玉手箱を開ける浦島さん">
+      <p class="story-body">
+        そう思(おも)った浦島さんは、開(あ)けてはいけないと言われていた玉手箱を開けてしまいました。モクモクモク・・・。すると中から、まっ白(しろ)のけむりが出てきました。けむりの中に、竜宮(りゅうぐう)や美(うつく)しい乙姫(おとひめ)さまの姿(すがた)がうつりました。そして楽(たの)しかった竜宮での三年が、次から次へとうつし出されます。でも玉手箱から出てきたけむりは次第(しだい)に薄(うす)れていき、その場(ば)に残(のこ)ったのは髪(かみ)の毛(け)もひげもまっ白(しろ)の、ヨポヨポのおじいさんになった浦島さんだったのです。
+      </p>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-row"><div class="speaker">たろう</div><div class="line">「ああ、わたしは、竜宮へ戻(もど)ってきたんだ」</div></div>
+    </div>
+    <a class="back-top" href="#Start">↑ 先頭へ</a>
+  </section>
+
+  <div class="wave-divider"><span>終</span></div>
+  <footer>むかしむかし &nbsp;&#x30FB;&nbsp; 日本の民話</footer>
+
+</div>
+
+<script>
+  let currentLang = 'ja';
+  let translationCache = null;
+
+  // All Japanese text content keyed by ID
+  const jaContent = {
+    eyebrow: 'むかしばなし',
+    title: 'うらしま太郎',
+    toc1: 'にがしておやりよ', toc2: 'りゅうぐうじょう', toc3: 'おとひめさま',
+    toc4: 'たまてばこ', toc5: 'かえってみると', toc6: 'まっしろのけむり',
+    h2_1: 'にがしておやりよ', h2_2: 'りゅうぐうじょう', h2_3: 'おとひめさま',
+    h2_4: 'たまてばこ', h2_5: 'かえってみると', h2_6: 'まっしろのけむり',
+    num1: '一', num2: '二', num3: '三', num4: '四', num5: '五', num6: '六',
+    p1: 'むかしむかし、ある村(むら)に、心のやさしい浦島太郎(うらしまたろう)という若者(わかもの)がいました。浦島(うらしま)さんが海辺(うみべ)を通りかかると、子どもたちが大きなカメを捕(つか)まえていました。そばによって見てみると、子どもたちがみんなでカメをいじめています。見るとカメは涙(なみだ)をハラハラとこぼしながら、浦島(うらしま)さんを見つめています。',
+    p2: 'さて、それから二、三日たったある日の事、浦島さんが海に出かけて魚(さかな)を釣(つ)っていると、「・・・浦島さん、・・・浦島さん」と、誰(だれ)かが呼(よ)ぶ声(こえ)がします。カメは浦島さんを背中に乗せて、海の中をずんずんともぐっていきました。海の中にはまっ青(さお)な光(ひかり)が差(さ)し込(こ)み、コンブがユラユラとゆれ、赤やピンクのサンゴの林(はやし)がどこまでも続(つづ)いています。',
+    p3: '浦島さんがウットリしていると、やがて立派(りっぱ)なご殿(てん)へ着(つ)きました。カメに案内(あんない)されるまま進(すす)んでいくと、この竜宮の主人(しゅじん)の美(うつく)しい乙姫(おとひめ)さまが、色とりどりの魚(さかな)たちと一緒(いっしょ)に浦島さんを出迎(でむか)えてくれました。浦島さんは、竜宮の広間(ひろま)ヘ案内(あんない)されました。ふんわりと気持(きも)ちのよい音楽(おんがく)が流(なが)れて、タイやヒラメやクラゲたちの、それは見事(みごと)な踊(おど)りが続(つづ)きました。',
+    p4: '乙姫(おとひめ)さまに言われるまま竜宮(りゅうぐう)で過(す)ごすうちに、三年(さんねん)の月日(つきひ)がたってしまいました。ある時、浦島さんは、はっと思い出しました。（家族(かぞく)や友(とも)だちは、どうしているだろう？）そこで浦島さんは、乙姫(おとひめ)さまに言いました。',
+    p5: '乙姫さまと別(わか)れた浦島さんは、またカメに送(おく)られて地上(ちじょう)へ帰(かえ)りました。地上にもどった浦島さんは、まわりを見回(みまわ)してびっくり。確(たし)かにここは浦島さんが釣(つ)りをしていた場所(ばしょ)ですが、何だか様子が違(ちが)います。浦島さんの家はどこにも見あたりませんし、出会(であ)う人も知(し)らない人ばかりです。浦島さんが一人(ひとり)の老人(ろうじん)に尋(たず)ねてみました。',
+    p6: 'そう思(おも)った浦島さんは、開(あ)けてはいけないと言われていた玉手箱を開けてしまいました。モクモクモク・・・。すると中から、まっ白(しろ)のけむりが出てきました。けむりの中に、竜宮(りゅうぐう)や美(うつく)しい乙姫(おとひめ)さまの姿(すがた)がうつりました。そして楽(たの)しかった竜宮での三年が、次から次へとうつし出されます。でも玉手箱から出てきたけむりは次第(しだい)に薄(うす)れていき、その場(ば)に残(のこ)ったのは髪(かみ)の毛(け)もひげもまっ白(しろ)の、ヨポヨポのおじいさんになった浦島さんだったのです。',
+    footer: 'むかしむかし \u3000・\u3000 日本の民話',
+    backtop1: '↑ 先頭へ', backtop2: '↑ 先頭へ', backtop3: '↑ 先頭へ',
+    backtop4: '↑ 先頭へ', backtop5: '↑ 先頭へ', backtop6: '↑ 先頭へ',
+    sp_taro: 'たろう', sp_kodo: 'こども', sp_kame: 'かめ',
+    sp_otohime: 'おとひめ', sp_rojin: 'ろうじん',
+    d1_l1: '「おやおや、かわいそうに、逃(に)がしておやりよ」',
+    d1_l2: '「いやだよ。おらたちが、やっと捕まえたんだもの。どうしようと、おらたちの勝手(かって)だろ」',
+    d1_l3: '「それでは、このお金をあげるから、おじさんにカメを売(う)っておくれ」',
+    d1_l4: '「うん、それならいいよ」',
+    d1_l5: '「カメさん、大丈夫(だいじょうぶ)かい？　もう、捕(つか)まるんじゃないよ」',
+    d2_l1: '「おや？誰が呼んでいるのだろう？」',
+    d2_l2: '「わたしですよ。このあいだは助(たす)けていただいて、ありがとうございました。おかげで助かりました。ところで浦島さんは、竜宮(りゅうぐう)へ行った事(こと)がありますか？」',
+    d2_l3: '「竜宮？　さあ？　竜宮って、どこにあるんだい？」',
+    d2_l4: '「海(うみ)の底(そこ)です。わたしがお連(つ)れしましょう。さあ、背中(せなか)へ乗(の)ってください」',
+    d3_l1: '「ようこそ、浦島(うらしま)さん。わたしは、この竜宮(りゅうぐう)の主人(しゅじん)の乙姫(おとひめ)です。このあいだはカメを助けてくださって、ありがとうございます。お礼(れい)に、竜宮をご案内(あんない)します。どうぞ、ゆっくりしていってくださいね」',
+    d4_l1: '「乙姫さま、今までありがとうございます。ですが、もうそろそろ家(いえ)へ帰(かえ)らせていただきます」',
+    d4_l2: '「帰(かえ)られるのですか？　よろしければ、このままここで暮(くら)しては」',
+    d4_l3: '「いいえ、わたしの帰(かえ)りを待(ま)つ者(もの)もおりますので」',
+    d4_l4: '「・・・そうですか。それはおなごりおしいです。では、おみやげに玉手箱(たまてばこ)を差(さ)し上(あ)げましょう。この中には、浦島(うらしま)さんが竜宮(りゅうぐう)で過(す)ごされた『時(とき)』が入(はい)っております。これを開(あ)けずに持(も)っている限(かぎ)り、浦島さんは年(とし)を取(と)りません。ですが一度(いちど)開(あ)けてしまうと、今までの『時』が戻(もど)ってしまいますので、決(けっ)して開(あ)けてはなりませんよ」',
+    d4_l5: '「はい、わかりました。ありがとうございます」',
+    d5_l1: '「・・・あの、すみません。浦島の家を知りませんか？」',
+    d5_l2: '「浦島？・・・ああ、確(たし)か浦島という人なら五十年ほど前(まえ)に海へ出たきりで、帰(かえ)らないそうですよ」',
+    d5_l3: '「えっ！五十年前。・・・竜宮の三年は、この世(よ)の五十年にあたるのだろうか・・・。家族(かぞく)も友(とも)だちも、みんな死(し)んでしまったのか・・・。そう言えば、乙姫(おとひめ)さまは言っていたな。この玉手箱を開(あ)けると、『時(とき)』が戻(もど)ってしまうと。・・・もしかしてこれを開けると、自分(じぶん)が暮(く)らしていた時(とき)に戻(もど)るのでは」',
+    d6_l1: '「ああ、わたしは、竜宮へ戻(もど)ってきたんだ」',
+  };
+
+  // Map of element selectors to content keys
+  const contentMap = [
+    ['.hero-eyebrow', 'eyebrow', 'text'],
+    ['h1', 'title', 'text'],
+    ['.toc li:nth-child(1) a', 'toc1', 'text'],
+    ['.toc li:nth-child(2) a', 'toc2', 'text'],
+    ['.toc li:nth-child(3) a', 'toc3', 'text'],
+    ['.toc li:nth-child(4) a', 'toc4', 'text'],
+    ['.toc li:nth-child(5) a', 'toc5', 'text'],
+    ['.toc li:nth-child(6) a', 'toc6', 'text'],
+    ['#S1 h2', 'h2_1', 'text'],
+    ['#S2 h2', 'h2_2', 'text'],
+    ['#S3 h2', 'h2_3', 'text'],
+    ['#S4 h2', 'h2_4', 'text'],
+    ['#S5 h2', 'h2_5', 'text'],
+    ['#S6 h2', 'h2_6', 'text'],
+    ['#S1 h2', 'num1', 'data-num'],
+    ['#S2 h2', 'num2', 'data-num'],
+    ['#S3 h2', 'num3', 'data-num'],
+    ['#S4 h2', 'num4', 'data-num'],
+    ['#S5 h2', 'num5', 'data-num'],
+    ['#S6 h2', 'num6', 'data-num'],
+    ['#S1 .story-body', 'p1', 'text'],
+    ['#S2 .story-body', 'p2', 'text'],
+    ['#S3 .story-body', 'p3', 'text'],
+    ['#S4 .story-body', 'p4', 'text'],
+    ['#S5 .story-body', 'p5', 'text'],
+    ['#S6 .story-body', 'p6', 'text'],
+    ['footer', 'footer', 'text'],
+    // dialogue speakers
+    ['#S1 .dialogue-row:nth-child(1) .speaker', 'sp_taro', 'text'],
+    ['#S1 .dialogue-row:nth-child(2) .speaker', 'sp_kodo', 'text'],
+    ['#S1 .dialogue-row:nth-child(3) .speaker', 'sp_taro', 'text'],
+    ['#S1 .dialogue-row:nth-child(4) .speaker', 'sp_kodo', 'text'],
+    ['#S1 .dialogue-row:nth-child(5) .speaker', 'sp_taro', 'text'],
+    ['#S2 .dialogue-row:nth-child(1) .speaker', 'sp_taro', 'text'],
+    ['#S2 .dialogue-row:nth-child(2) .speaker', 'sp_kame', 'text'],
+    ['#S2 .dialogue-row:nth-child(3) .speaker', 'sp_taro', 'text'],
+    ['#S2 .dialogue-row:nth-child(4) .speaker', 'sp_kame', 'text'],
+    ['#S3 .dialogue-row:nth-child(1) .speaker', 'sp_otohime', 'text'],
+    ['#S4 .dialogue-row:nth-child(1) .speaker', 'sp_taro', 'text'],
+    ['#S4 .dialogue-row:nth-child(2) .speaker', 'sp_otohime', 'text'],
+    ['#S4 .dialogue-row:nth-child(3) .speaker', 'sp_taro', 'text'],
+    ['#S4 .dialogue-row:nth-child(4) .speaker', 'sp_otohime', 'text'],
+    ['#S4 .dialogue-row:nth-child(5) .speaker', 'sp_taro', 'text'],
+    ['#S5 .dialogue-row:nth-child(1) .speaker', 'sp_taro', 'text'],
+    ['#S5 .dialogue-row:nth-child(2) .speaker', 'sp_rojin', 'text'],
+    ['#S5 .dialogue-row:nth-child(3) .speaker', 'sp_taro', 'text'],
+    ['#S6 .dialogue-row:nth-child(1) .speaker', 'sp_taro', 'text'],
+    // dialogue lines
+    ['#S1 .dialogue-row:nth-child(1) .line', 'd1_l1', 'text'],
+    ['#S1 .dialogue-row:nth-child(2) .line', 'd1_l2', 'text'],
+    ['#S1 .dialogue-row:nth-child(3) .line', 'd1_l3', 'text'],
+    ['#S1 .dialogue-row:nth-child(4) .line', 'd1_l4', 'text'],
+    ['#S1 .dialogue-row:nth-child(5) .line', 'd1_l5', 'text'],
+    ['#S2 .dialogue-row:nth-child(1) .line', 'd2_l1', 'text'],
+    ['#S2 .dialogue-row:nth-child(2) .line', 'd2_l2', 'text'],
+    ['#S2 .dialogue-row:nth-child(3) .line', 'd2_l3', 'text'],
+    ['#S2 .dialogue-row:nth-child(4) .line', 'd2_l4', 'text'],
+    ['#S3 .dialogue-row:nth-child(1) .line', 'd3_l1', 'text'],
+    ['#S4 .dialogue-row:nth-child(1) .line', 'd4_l1', 'text'],
+    ['#S4 .dialogue-row:nth-child(2) .line', 'd4_l2', 'text'],
+    ['#S4 .dialogue-row:nth-child(3) .line', 'd4_l3', 'text'],
+    ['#S4 .dialogue-row:nth-child(4) .line', 'd4_l4', 'text'],
+    ['#S4 .dialogue-row:nth-child(5) .line', 'd4_l5', 'text'],
+    ['#S5 .dialogue-row:nth-child(1) .line', 'd5_l1', 'text'],
+    ['#S5 .dialogue-row:nth-child(2) .line', 'd5_l2', 'text'],
+    ['#S5 .dialogue-row:nth-child(3) .line', 'd5_l3', 'text'],
+    ['#S6 .dialogue-row:nth-child(1) .line', 'd6_l1', 'text'],
+    // back to top links
+    ['#S1 .back-top', 'backtop1', 'text'],
+    ['#S2 .back-top', 'backtop2', 'text'],
+    ['#S3 .back-top', 'backtop3', 'text'],
+    ['#S4 .back-top', 'backtop4', 'text'],
+    ['#S5 .back-top', 'backtop5', 'text'],
+    ['#S6 .back-top', 'backtop6', 'text'],
+  ];
+
+  function applyContent(contentObj) {
+    document.body.classList.add('translating');
+    setTimeout(() => {
+      for (const [selector, key, attr] of contentMap) {
+        const el = document.querySelector(selector);
+        if (!el || !contentObj[key]) continue;
+        if (attr === 'text') el.textContent = contentObj[key];
+        else el.setAttribute(attr, contentObj[key]);
+      }
+      document.body.classList.remove('translating');
+    }, 150);
+  }
+
+  async function fetchTranslation() {
+    // Build a single prompt with all text to translate
+    const entries = Object.entries(jaContent).map(([k, v]) => `${k}: ${v}`).join('\n');
+    const prompt = `Translate the following Japanese text keys to natural English. This is the Japanese folk tale of Urashima Taro. Preserve the storytelling tone. For speaker names use: sp_taro→"Taro", sp_kodo→"Child", sp_kame→"Turtle", sp_otohime→"Princess", sp_rojin→"Elder". For num1–num6 use: "I","II","III","IV","V","VI". For footer use: "Once upon a time · A Japanese Folk Tale". For backtop1–6 use "↑ Back to Top". Return ONLY a JSON object with the same keys and English values, no markdown, no explanation.\n\n${entries}`;
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content.map(b => b.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  }
+
+  async function toggleLanguage() {
+    const btn = document.getElementById('langBtn');
+    const label = btn.querySelector('.btn-label');
+
+    if (currentLang === 'ja') {
+      // Switch to English
+      btn.disabled = true;
+      btn.classList.add('loading');
+      label.textContent = 'Translating…';
+
+      try {
+        if (!translationCache) {
+          translationCache = await fetchTranslation();
+        }
+        applyContent(translationCache);
+        currentLang = 'en';
+        label.textContent = '🌸 日本語';
+      } catch (e) {
+        console.error(e);
+        label.textContent = '⚠ Error';
+        setTimeout(() => { label.textContent = '🌐 English'; }, 2000);
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+      }
+    } else {
+      // Switch back to Japanese
+      applyContent(jaContent);
+      currentLang = 'ja';
+      label.textContent = '🌐 English';
+    }
+  }
+</script>
+</body>
+</html>
